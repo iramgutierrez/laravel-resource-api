@@ -1,5 +1,5 @@
 {
-  "name": "iramgutierrez/create-resource-api-laravel",
+  "name": "iramgutierrez/laravel-resource-api",
   "description": "Create a resource API for Laravel 5.2: entity, repository, manager, validator, controller, migration, table , route and documentation",
   "require": {
     "php": ">=5.5.9",
