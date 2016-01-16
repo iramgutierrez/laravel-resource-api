@@ -1,0 +1,14 @@
+{
+  "name": "iramgutierrez/create-resource-api-laravel",
+  "description": "Create a resource API for Laravel 5.2: entity, repository, manager, validator, controller, migration, table , route and documentation",
+  "require": {
+    "php": ">=5.5.9",
+    "memio/memio": "^1.0"
+  },
+  "autoload": {
+    "classmap": [],
+    "psr-4": {
+      "CMS\\": "CMS"
+    }
+  }
+}
