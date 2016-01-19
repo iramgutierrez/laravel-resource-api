@@ -1,6 +1,13 @@
 {
   "name": "iramgutierrez/laravel-resource-api",
   "description": "Create a resource API for Laravel 5.2: entity, repository, manager, validator, controller, migration, table , route and documentation",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Iram Gutiérrez",
+      "email": "iramgutzglez@gmail.com"
+    }
+  ],
   "require": {
     "php": ">=5.5.9",
     "memio/memio": "^1.0"
@@ -10,5 +17,12 @@
     "psr-4": {
       "CMS\\": "CMS"
     }
-  }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.1-dev"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
