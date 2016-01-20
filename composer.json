@@ -15,7 +15,7 @@
   "autoload": {
     "classmap": [],
     "psr-4": {
-      "CMS\\": "CMS"
+      "iramgutierrez\API\\": "API"
     }
   },
   "extra": {

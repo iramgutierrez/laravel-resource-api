@@ -1,13 +1,13 @@
 <?php
 
-namespace CMS\Validators;
+namespace iramgutierrez\API\Validators;
 
-use CMS\Entities\BaseEntity as Entity;
+use iramgutierrez\API\Entities\BaseEntity as Entity;
 
 
 /**
  * Class BaseValidator
- * @package CMS\Validators
+ * @package iramgutierrez\API\Validators
  */
 abstract class BaseValidator
 {

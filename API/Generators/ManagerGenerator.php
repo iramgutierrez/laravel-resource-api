@@ -1,6 +1,6 @@
 <?php
 
-namespace CMS\Generators;
+namespace iramgutierrez\API\Generators;
 
 use Memio\Memio\Config\Build;
 use Memio\Model\File;
@@ -12,7 +12,7 @@ use Memio\Model\Constant;
 use Memio\Model\FullyQualifiedName;
 use Memio\Model\Phpdoc\LicensePhpdoc;
 
-use CMS\Managers\BaseManager;
+use iramgutierrez\API\Managers\BaseManager;
 
 class ManagerGenerator extends BaseGenerator{
 

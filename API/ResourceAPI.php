@@ -1,15 +1,15 @@
 <?php
 
-namespace CMS;
+namespace iramgutierrez\API;
 
 use Illuminate\Console\Command;
 
-use CMS\Generators\EntityGenerator as Entity;
-use CMS\Generators\RepositoryGenerator as Repository;
-use CMS\Generators\ValidatorGenerator as Validator;
-use CMS\Generators\ManagerGenerator as Manager;
-use CMS\Generators\ControllerGenerator as Controller;
-use CMS\Generators\RouteGenerator as Route;
+use iramgutierrez\API\Generators\EntityGenerator as Entity;
+use iramgutierrez\API\Generators\RepositoryGenerator as Repository;
+use iramgutierrez\API\Generators\ValidatorGenerator as Validator;
+use iramgutierrez\API\Generators\ManagerGenerator as Manager;
+use iramgutierrez\API\Generators\ControllerGenerator as Controller;
+use iramgutierrez\API\Generators\RouteGenerator as Route;
 
 class ResourceAPI extends Command
 {
@@ -32,6 +32,8 @@ class ResourceAPI extends Command
     protected $controller;
 
     protected $route;
+
+    protected $path;
 
     protected $layers = [
         'entity',
@@ -76,6 +78,8 @@ class ResourceAPI extends Command
         $this->controller = $Controller;
 
         $this->route = $Route;
+
+        $this->path = \Config::get('resource_api.path' , 'API');
     }
 
     /**
@@ -143,7 +147,7 @@ class ResourceAPI extends Command
                     {
                         $isDir = false;
 
-                        $this->error('No se pudo crear el directorio app/CMS/database/'.$this->table);
+                        $this->error('No se pudo crear el directorio app/'.$this->path.'/database/'.$this->table);
                     }
 
                 }
@@ -203,7 +207,7 @@ class ResourceAPI extends Command
 
             if($this->documentation)
             {
-                exec('apidoc -i app/Http/Controllers/CMS/ -f "'.$this->base.'Controller.php" -o public/docs/'.snake_case(str_plural($this->base)));
+                exec('apidoc -i app/Http/Controllers/'.$this->path.'/ -f "'.$this->base.'Controller.php" -o public/docs/'.snake_case(str_plural($this->base)));
 
             }
 

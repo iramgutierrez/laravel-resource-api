@@ -1,12 +1,12 @@
 <?php
 
-namespace CMS\Controllers;
+namespace iramgutierrez\API\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use CMS\Repositories\BaseRepository as Repository;
-use CMS\Managers\BaseManager as Manager;
-use CMS\Entities\BaseEntity as Entity;
+use iramgutierrez\API\Repositories\BaseRepository as Repository;
+use iramgutierrez\API\Managers\BaseManager as Manager;
+use iramgutierrez\API\Entities\BaseEntity as Entity;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\MessageBag;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace CMS\Generators;
+namespace iramgutierrez\API\Generators;
 
 abstract class BaseGenerator{
 

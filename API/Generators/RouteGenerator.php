@@ -1,10 +1,10 @@
 <?php
 
-namespace CMS\Generators;
+namespace iramgutierrez\API\Generators;
 
 use Illuminate\Support\Facades\File;
 
-use CMS\Entities\BaseEntity;
+use iramgutierrez\API\Entities\BaseEntity;
 
 class RouteGenerator{
 

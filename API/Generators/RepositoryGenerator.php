@@ -1,6 +1,6 @@
 <?php
 
-namespace CMS\Generators;
+namespace iramgutierrez\API\Generators;
 
 use Memio\Memio\Config\Build;
 use Memio\Model\File;
@@ -12,40 +12,27 @@ use Memio\Model\Constant;
 use Memio\Model\FullyQualifiedName;
 use Memio\Model\Phpdoc\LicensePhpdoc;
 
-use CMS\Validators\BaseValidator;
+use iramgutierrez\API\Repositories\BaseRepository;
 
-class ValidatorGenerator extends BaseGenerator{
+class RepositoryGenerator extends BaseGenerator{
 
-    protected $pathfile = 'Validators';
+    protected $pathfile = 'Repositories';
 
-    protected $layer = 'Validator';
+    protected $layer = 'Repository';
 
     public function generate()
     {
         $repository = File::make($this->filename)
             ->setLicensePhpdoc(new LicensePhpdoc(self::PROJECT_NAME, self::AUTHOR_NAME, self::AUTHOR_EMAIL))
-            ->addFullyQualifiedName(new FullyQualifiedName(BaseValidator::class))
+            ->addFullyQualifiedName(new FullyQualifiedName(BaseRepository::class))
             ->addFullyQualifiedName(new FullyQualifiedName($this->appNamespace."Entities\\".$this->entity."Entity as Entity"))
             ->setStructure(
                 Object::make($this->namespace.$this->entity.$this->layer)
-                    ->extend(new Object(BaseValidator::class))
-                    ->addProperty(
-                        Property::make('rules')
-                            ->makeProtected()
-                            ->setDefaultValue("[]")
-                    )
+                    ->extend(new Object(BaseRepository::class))
                     ->addMethod(
                         Method::make('__construct')
                             ->addArgument(new Argument('Entity', 'Entity'))
                             ->setBody('        parent::__construct($Entity);')
-                    )
-                    ->addMethod(
-                        Method::make('getCreateRules')
-                            ->setBody('        return parent::getCreateRules();')
-                    )
-                    ->addMethod(
-                        Method::make('getUpdateRules')
-                            ->setBody('        return parent::getUpdateRules();')
                     )
             );
 
