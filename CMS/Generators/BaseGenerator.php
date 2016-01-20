@@ -4,6 +4,11 @@ namespace CMS\Generators;
 
 abstract class BaseGenerator{
 
+
+    use \Illuminate\Console\AppNamespaceDetectorTrait;
+
+    protected $path;
+
     protected $entity;
 
     protected $filename;
@@ -13,6 +18,20 @@ abstract class BaseGenerator{
     protected $layer;
 
     protected $namespace;
+
+    protected $appNamespace;
+
+    public function __construct()
+    {
+
+        $this->pathname= \Config::get('resource_api.path' , 'API');
+
+        $this->appNamespace = $this->getAppNamespace().$this->pathname.'\\';
+
+        $this->namespace = $this->appNamespace.$this->pathfile.'\\';
+
+        $this->path = app_path().'/'.$this->pathname.'/';
+    }
 
     const EXTENSION_FILE = '.php';
 
@@ -42,7 +61,42 @@ abstract class BaseGenerator{
 
     private function generateFileName()
     {
-        $this->filename = $this->pathfile.$this->entity.$this->layer.self::EXTENSION_FILE;
+        $this->filename = $this->path.$this->pathfile.'/'.$this->entity.$this->layer.self::EXTENSION_FILE;
+    }
+
+    protected function generateFile($code)
+    {
+
+        if(!\File::isDirectory($this->path))
+        {
+            \File::makeDirectory($this->path);
+        }
+
+        if(\File::isWritable($this->path)){
+
+            if(!\File::isDirectory($this->path.$this->pathfile))
+            {
+                \File::makeDirectory($this->path.$this->pathfile);
+            }
+
+            if(\File::isWritable($this->path.$this->pathfile))
+            {
+                \File::put($this->filename , $code);
+
+                if(\File::exists($this->filename))
+                {
+                    return "File ".$this->filename." created successfully";
+                }
+                else
+                {
+                    return "no se pudo crear ".$this->filename;
+                }
+            }
+
+            return "No se puede escribir o no existe ".$this->path.$this->pathfile;
+        }
+
+        return "No se puede escribir o no existe ".$this->path;
     }
 
     abstract function generate();

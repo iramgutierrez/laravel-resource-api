@@ -16,17 +16,16 @@ use CMS\Validators\BaseValidator;
 
 class ValidatorGenerator extends BaseGenerator{
 
-    protected $pathfile = 'app/CMS/Validators/';
+    protected $pathfile = 'Validators';
 
     protected $layer = 'Validator';
-
-    protected $namespace = 'CMS\\Validators\\';
 
     public function generate()
     {
         $repository = File::make($this->filename)
             ->setLicensePhpdoc(new LicensePhpdoc(self::PROJECT_NAME, self::AUTHOR_NAME, self::AUTHOR_EMAIL))
-            ->addFullyQualifiedName(new FullyQualifiedName("CMS\Entities\\".$this->entity."Entity as Entity"))
+            ->addFullyQualifiedName(new FullyQualifiedName(BaseValidator::class))
+            ->addFullyQualifiedName(new FullyQualifiedName($this->appNamespace."Entities\\".$this->entity."Entity as Entity"))
             ->setStructure(
                 Object::make($this->namespace.$this->entity.$this->layer)
                     ->extend(new Object(BaseValidator::class))
@@ -53,10 +52,6 @@ class ValidatorGenerator extends BaseGenerator{
         $prettyPrinter = Build::prettyPrinter();
         $generatedCode = $prettyPrinter->generateCode($repository);
 
-        $myfile = fopen($this->filename, "w") or die("Unable to open file!");
-        fwrite($myfile, $generatedCode);
-        fclose($myfile);
-
-        return "File ".$this->filename." created successfully";
+        return $this->generateFile($generatedCode);
     }
 }

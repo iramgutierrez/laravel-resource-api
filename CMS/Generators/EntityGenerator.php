@@ -16,11 +16,9 @@ use CMS\Entities\BaseEntity;
 
 class EntityGenerator extends BaseGenerator{
 
-    protected $pathfile = 'app/CMS/Entities/';
+    protected $pathfile = 'Entities';
 
     protected $layer = 'Entity';
-
-    protected $namespace = 'CMS\\Entities\\';
 
     protected $table;
 
@@ -38,6 +36,7 @@ class EntityGenerator extends BaseGenerator{
             ->addFullyQualifiedName(
                 new FullyQualifiedName(\Illuminate\Database\Eloquent\Collection::class)
             )
+            ->addFullyQualifiedName(new FullyQualifiedName(BaseEntity::class))
             ->setStructure(
                 Object::make($this->namespace.$this->entity.$this->layer)
                     ->extend(
@@ -68,10 +67,8 @@ class EntityGenerator extends BaseGenerator{
         $prettyPrinter = Build::prettyPrinter();
         $generatedCode = $prettyPrinter->generateCode($entity);
 
-        $myfile = fopen($this->filename, "w") or die("Unable to open file!");
-        fwrite($myfile, $generatedCode);
-        fclose($myfile);
+        return $this->generateFile($generatedCode);
 
-        return "File ".$this->filename." created successfully";
+
     }
 }

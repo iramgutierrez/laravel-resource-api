@@ -16,18 +16,17 @@ use CMS\Managers\BaseManager;
 
 class ManagerGenerator extends BaseGenerator{
 
-    protected $pathfile = 'app/CMS/Managers/';
+    protected $pathfile = 'Managers';
 
     protected $layer = 'Manager';
-
-    protected $namespace = 'CMS\\Managers\\';
 
     public function generate()
     {
         $repository = File::make($this->filename)
             ->setLicensePhpdoc(new LicensePhpdoc(self::PROJECT_NAME, self::AUTHOR_NAME, self::AUTHOR_EMAIL))
-            ->addFullyQualifiedName(new FullyQualifiedName("CMS\Entities\\".$this->entity."Entity as Entity"))
-            ->addFullyQualifiedName(new FullyQualifiedName("CMS\Validators\\".$this->entity."Validator as Validator"))
+            ->addFullyQualifiedName(new FullyQualifiedName(BaseManager::class))
+            ->addFullyQualifiedName(new FullyQualifiedName($this->appNamespace."Entities\\".$this->entity."Entity as Entity"))
+            ->addFullyQualifiedName(new FullyQualifiedName($this->appNamespace."Validators\\".$this->entity."Validator as Validator"))
             ->setStructure(
                 Object::make($this->namespace.$this->entity.$this->layer)
                     ->extend(new Object(BaseManager::class))
@@ -60,10 +59,6 @@ class ManagerGenerator extends BaseGenerator{
         $prettyPrinter = Build::prettyPrinter();
         $generatedCode = $prettyPrinter->generateCode($repository);
 
-        $myfile = fopen($this->filename, "w") or die("Unable to open file!");
-        fwrite($myfile, $generatedCode);
-        fclose($myfile);
-
-        return "File ".$this->filename." created successfully";
+        return $this->generateFile($generatedCode);
     }
 }

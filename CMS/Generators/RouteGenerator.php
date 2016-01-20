@@ -10,7 +10,9 @@ class RouteGenerator{
 
     public function generate($base , $path , $prefix = '' , $middlewares = [])
     {
-        $contentRoutes = "Route::group(['namespace' => 'CMS'";
+        $pathname = \Config::get('resource_api.path' , 'API');
+
+        $contentRoutes = "Route::group(['namespace' => '".$pathname."'";
 
         if($prefix)
         {

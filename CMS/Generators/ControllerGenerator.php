@@ -19,7 +19,7 @@ use Memio\Model\Phpdoc\ParameterTag;
 
 use Illuminate\Http\Request;
 
-use App\Http\Controllers\CMS\BaseController;
+use CMS\Controllers\BaseController;
 
 class ControllerGenerator extends BaseGenerator{
 
@@ -27,11 +27,22 @@ class ControllerGenerator extends BaseGenerator{
 
     protected $documentation;
 
-    protected $pathfile = 'app/Http/Controllers/CMS/';
+    protected $pathfile;
 
     protected $layer = 'Controller';
 
-    protected $namespace = 'App\\Http\\Controllers\\CMS\\';
+    public function __construct()
+    {
+        $this->pathname = \Config::get('resource_api.path' , 'API');
+
+        $this->pathfile = $this->pathname;
+
+        $this->appNamespace = $this->getAppNamespace().$this->pathname.'\\';
+
+        $this->namespace = $this->getAppNamespace().'Http\\Controllers\\'.$this->pathname.'\\';
+
+        $this->path = app_path().'/Http/Controllers/';
+    }
 
     public function generate()
     {
@@ -41,8 +52,9 @@ class ControllerGenerator extends BaseGenerator{
         $repository = File::make($this->filename)
             ->setLicensePhpdoc(new LicensePhpdoc(self::PROJECT_NAME, self::AUTHOR_NAME, self::AUTHOR_EMAIL))
             ->addFullyQualifiedName(new FullyQualifiedName(\Illuminate\Http\Request::class))
-            ->addFullyQualifiedName(new FullyQualifiedName("CMS\Repositories\\".$this->entity."Repository as Repository"))
-            ->addFullyQualifiedName(new FullyQualifiedName("CMS\Managers\\".$this->entity."Manager as Manager"))
+            ->addFullyQualifiedName(new FullyQualifiedName(BaseController::class))
+            ->addFullyQualifiedName(new FullyQualifiedName($this->appNamespace."Repositories\\".$this->entity."Repository as Repository"))
+            ->addFullyQualifiedName(new FullyQualifiedName($this->appNamespace."Managers\\".$this->entity."Manager as Manager"))
             ->setStructure(
                 Object::make($this->namespace.$this->entity.$this->layer)
                     ->extend(new Object(BaseController::class))
@@ -281,11 +293,7 @@ class ControllerGenerator extends BaseGenerator{
         $prettyPrinter = Build::prettyPrinter();
         $generatedCode = $prettyPrinter->generateCode($repository);
 
-        $myfile = fopen($this->filename, "w") or die("Unable to open file!");
-        fwrite($myfile, $generatedCode);
-        fclose($myfile);
-
-        return "File ".$this->filename." created successfully";
+        return $this->generateFile($generatedCode);
     }
 
     public function setPrefix($prefix)
