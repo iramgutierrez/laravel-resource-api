@@ -1,15 +1,15 @@
 <?php
 
-namespace iramgutierrez\API;
+namespace Iramgutierrez\API;
 
 use Illuminate\Console\Command;
 
-use iramgutierrez\API\Generators\EntityGenerator as Entity;
-use iramgutierrez\API\Generators\RepositoryGenerator as Repository;
-use iramgutierrez\API\Generators\ValidatorGenerator as Validator;
-use iramgutierrez\API\Generators\ManagerGenerator as Manager;
-use iramgutierrez\API\Generators\ControllerGenerator as Controller;
-use iramgutierrez\API\Generators\RouteGenerator as Route;
+use Iramgutierrez\API\Generators\EntityGenerator as Entity;
+use Iramgutierrez\API\Generators\RepositoryGenerator as Repository;
+use Iramgutierrez\API\Generators\ValidatorGenerator as Validator;
+use Iramgutierrez\API\Generators\ManagerGenerator as Manager;
+use Iramgutierrez\API\Generators\ControllerGenerator as Controller;
+use Iramgutierrez\API\Generators\RouteGenerator as Route;
 
 class ResourceAPI extends Command
 {

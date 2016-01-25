@@ -1,6 +1,6 @@
 <?php
 
-namespace iramgutierrez\API\Generators;
+namespace Iramgutierrez\API\Generators;
 
 use Memio\Memio\Config\Build;
 use Memio\Model\File;
@@ -12,7 +12,7 @@ use Memio\Model\Constant;
 use Memio\Model\FullyQualifiedName;
 use Memio\Model\Phpdoc\LicensePhpdoc;
 
-use iramgutierrez\API\Entities\BaseEntity;
+use Iramgutierrez\API\Entities\BaseEntity;
 
 class EntityGenerator extends BaseGenerator{
 

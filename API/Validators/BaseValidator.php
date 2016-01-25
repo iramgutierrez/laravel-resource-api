@@ -1,13 +1,13 @@
 <?php
 
-namespace iramgutierrez\API\Validators;
+namespace Iramgutierrez\API\Validators;
 
-use iramgutierrez\API\Entities\BaseEntity as Entity;
+use Iramgutierrez\API\Entities\BaseEntity as Entity;
 
 
 /**
  * Class BaseValidator
- * @package iramgutierrez\API\Validators
+ * @package Iramgutierrez\API\Validators
  */
 abstract class BaseValidator
 {

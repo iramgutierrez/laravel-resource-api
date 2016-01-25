@@ -1,6 +1,6 @@
 <?php
 
-namespace iramgutierrez\API\Generators;
+namespace Iramgutierrez\API\Generators;
 
 use Memio\Memio\Config\Build;
 use Memio\Model\File;
@@ -19,7 +19,7 @@ use Memio\Model\Phpdoc\ParameterTag;
 
 use Illuminate\Http\Request;
 
-use iramgutierrez\API\Controllers\BaseController;
+use Iramgutierrez\API\Controllers\BaseController;
 
 class ControllerGenerator extends BaseGenerator{
 
