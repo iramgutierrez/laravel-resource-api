@@ -15,7 +15,7 @@
   "autoload": {
     "classmap": [],
     "psr-4": {
-      "Iramgutierrez\\API\\": "API"
+      "Iramgutierrez\\API\\": "src"
     }
   },
   "extra": {

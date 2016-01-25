@@ -10,6 +10,7 @@ use Iramgutierrez\API\Generators\ValidatorGenerator as Validator;
 use Iramgutierrez\API\Generators\ManagerGenerator as Manager;
 use Iramgutierrez\API\Generators\ControllerGenerator as Controller;
 use Iramgutierrez\API\Generators\RouteGenerator as Route;
+use Iramgutierrez\API\Generators\MigrationGenerator as Migration;
 
 class ResourceAPI extends Command
 {
@@ -33,6 +34,8 @@ class ResourceAPI extends Command
 
     protected $route;
 
+    protected $migration;
+
     protected $path;
 
     protected $layers = [
@@ -40,7 +43,7 @@ class ResourceAPI extends Command
         'repository',
         'validator',
         'manager',
-        'controller',
+        'controller'
     ];
 
     /**
@@ -63,7 +66,7 @@ class ResourceAPI extends Command
      *
      * @return void
      */
-    public function __construct(Entity $Entity, Repository $Repository, Validator $Validator, Manager $Manager, Controller $Controller, Route $Route)
+    public function __construct(Entity $Entity, Repository $Repository, Validator $Validator, Manager $Manager, Controller $Controller, Route $Route , Migration $Migration)
     {
         parent::__construct();
 
@@ -78,6 +81,8 @@ class ResourceAPI extends Command
         $this->controller = $Controller;
 
         $this->route = $Route;
+
+        $this->migration = $Migration;
 
         $this->path = \Config::get('resource_api.path' , 'API');
     }
@@ -96,7 +101,7 @@ class ResourceAPI extends Command
 
         $this->prefix = $this->ask('Prefix route' , false);
 
-        $this->documentation = $this->confirm('Generate documentation?' , 'yes');
+        $this->documentation = $this->confirm('Generate documentation? (Require apidocjs)' , 'yes');
 
         $createLayers = [];
 
@@ -138,32 +143,12 @@ class ResourceAPI extends Command
 
             if($this->confirm('Generate migration?' , 'yes'))
             {
-                $isDir = true;
 
-                if(!is_dir('database/migrations/'.$this->table))
+                $createMigration = $this->migration->generate(snake_case(str_plural($this->base)) , $this->table);
+
+                if($createMigration['success'])
                 {
-
-                    if(!mkdir('database/migrations/'.$this->table, 0766 , true))
-                    {
-                        $isDir = false;
-
-                        $this->error('No se pudo crear el directorio app/'.$this->path.'/database/'.$this->table);
-                    }
-
-                }
-
-                if($isDir)
-                {
-                    $nameMigration = 'create_'.$this->table.'_table_'.time();
-
-                    $this->callSilent('make:migration', [
-                        'name' => $nameMigration,
-                        '--create' => $this->table,
-                        '--table' => $this->table,
-                        '--path' => 'database/migrations/'.$this->table
-                    ]);
-
-                    $this->info('Migration created in: database/migrations/'.$this->table.'/'.$nameMigration.',php');
+                    $this->info($createMigration['message']);
 
                     if($this->confirm('Run migration?' , 'yes'))
                     {
@@ -172,7 +157,7 @@ class ResourceAPI extends Command
                         {
 
                             $this->call('migrate', [
-                                '--path' => 'database/migrations/'.$this->table
+                                '--path' => 'database/migrations/'.snake_case(str_plural($this->base))
                             ]);
 
                         }catch (\Exception $e)
@@ -183,6 +168,11 @@ class ResourceAPI extends Command
 
                     }
 
+                }
+                else
+                {
+
+                    $this->error($createMigration['error']);
                 }
             }
 
@@ -207,8 +197,9 @@ class ResourceAPI extends Command
 
             if($this->documentation)
             {
-                exec('apidoc -i app/Http/Controllers/'.$this->path.'/ -f "'.$this->base.'Controller.php" -o public/docs/'.snake_case(str_plural($this->base)));
+                $this->info('apidoc -i '.app_path().'/Http/Controllers/'.$this->path.'/ -f "'.$this->base.'Controller.php" -o '.public_path().'/docs/'.snake_case(str_plural($this->base)));
 
+                exec('apidoc -i '.app_path().'/Http/Controllers/'.$this->path.'/ -f "'.$this->base.'Controller.php" -o '.public_path().'/docs/'.snake_case(str_plural($this->base)));
             }
 
         }
@@ -230,8 +221,10 @@ class ResourceAPI extends Command
 
         $this->$layer->setEntity($this->base);
 
-        if($layer == 'entity')
+        if($layer == 'entity' || $layer == 'migration')
         {
+            $this->$layer->setTable($this->table);
+
             $this->$layer->setTable($this->table);
         }
 
