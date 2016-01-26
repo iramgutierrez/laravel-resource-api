@@ -188,7 +188,7 @@ class ResourceAPI extends Command
             if($this->confirm('Add routes resource?' , 'yes'))
             {
 
-                $path = snake_case(str_plural($this->base));
+                //$path = snake_case(str_plural($this->base));
 
                 $middlewares = $this->ask('Middlewares or middleware groups (comma separated)' , false);
 
@@ -196,12 +196,15 @@ class ResourceAPI extends Command
 
                 if($middlewares)
                 {
-                    $mdws = explode(',' , $middlewares);
+                    $mdws = explode(',' , str_replace(' ' , '',$middlewares));
 
                 }
-                $route = true;
 
-                $this->route->generate($this->base , $path , $this->prefix , $mdws);
+                sort($mdws);
+
+                $middlewares = implode(',' , $mdws);
+
+                $route = true;
 
             }
 
@@ -210,20 +213,21 @@ class ResourceAPI extends Command
                 exec('apidoc -i '.app_path().'/Http/Controllers/'.$this->path.'/ -f "'.$this->base.'Controller.php" -o '.public_path().'/docs/'.snake_case(str_plural($this->base)));
             }
 
-            $resource = [
-                'base' => $this->base,
-                'table' =>$this->table,
-                'prefix' => $this->prefix,
-                'documentation' =>$this->documentation,
-                'migration' => $migration,
-                'run_migration' => $run_migration,
-                'route' => $route,
-                'middlewares' => $middlewares
-            ];
+            $api_resource = APIResource::firstOrNew(['base' => $this->base]);
 
-            $api_resource = APIResource::create($resource);
+            $api_resource->base = $this->base;
+            $api_resource->namespace = $this->path;
+            $api_resource->table = $this->table;
+            $api_resource->prefix = ($this->prefix) ? $this->prefix : '';
+            $api_resource->documentation = $this->documentation;
+            $api_resource->migration = $migration;
+            $api_resource->run_migration = $run_migration;
+            $api_resource->route = $route;
+            $api_resource->middlewares = ($middlewares) ? $middlewares : '';
 
             $api_resource->save();
+
+            $this->route->generateAll();
 
         }
         else

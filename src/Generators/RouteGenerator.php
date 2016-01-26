@@ -4,62 +4,252 @@ namespace Iramgutierrez\API\Generators;
 
 use Illuminate\Support\Facades\File;
 
+use Iramgutierrez\API\Entities\APIResourceEntity as APIResource;
+
 
 
 class RouteGenerator{
 
-    public function generate($base , $path , $prefix = '' , $middlewares = [])
+    public function generateAll()
     {
-        $pathname = \Config::get('resource_api.path' , 'API');
+        $resources = APIResource::where('route' , true)->get();
+
+        $router = $this->generateRouter($resources);
 
         $file = app_path().'/Http/routes.php';
 
         $delimiter = '/**  GENERATE BY iramgutierrez/laravel-resource-api DO NOT REMOVE **/';
 
-        $contentRoutes = "Route::group(['namespace' => '".$pathname."'";
+        $contentRoutes = "";
 
-        if($prefix)
-        {
-            $contentRoutes .= ", 'prefix' => '".$prefix."'";
-        }
-
-        if(count($middlewares))
-        {
-            $contentRoutes .= ", 'middleware' => [";
-
-            foreach($middlewares as $w => $middleware)
-            {
-                if($w > 0)
-                {
-                    $contentRoutes .= ",";
-                }
-
-                $contentRoutes .= "'".$middleware."'";
-            }
-
-            $contentRoutes .= "]";
-        }
-
-        $contentRoutes .= "], function () {\n";
-
-        $contentRoutes .="  ";
-
-        $contentRoutes .= "Route::resource('".$path."' , '".$base."Controller');\n";
-
-        $contentRoutes .= "});";
+        $contentRoutes .= $delimiter;
 
         $contentRoutes .= "\n";
 
-        $contentRoutes = "\n".$delimiter."\n\n".$contentRoutes."\n".$delimiter."\n";
+        /* NAMESPACES */
 
-        //return File::append('app/Http/routes.php', $contentRoutes);
+        foreach($router['namespaces'] as $namespace => $ns)
+        {
+            $contentRoutes .= "Route::group(['namespace' => '".$namespace."'";
+
+            $contentRoutes .=  '] , function() {';
+
+            $contentRoutes .= "\n";
+
+            /* NAMESPACES PREFIXES */
+
+            foreach($ns['prefixes'] as $prefix => $p)
+            {
+                $contentRoutes .= "    Route::group(['prefix' => '".$prefix."'";
+
+                $contentRoutes .=  '] , function() {';
+
+                $contentRoutes .= "\n";
+
+                /* NAMESPACES PREFIXES MIDDLEWARE */
+
+                foreach($p['middlewares'] as $middleware => $mw)
+                {
+                    $contentRoutes .= "        Route::group(['middleware' => '".$middleware."'";
+
+                    $contentRoutes .=  '] , function() {';
+
+                    $contentRoutes .= "\n";
+
+                    /* NAMESPACES PREFIXES MIDDLEWARE ROUTES */
+
+                    foreach($mw['routes'] as $r => $route)
+                    {
+                        $contentRoutes .= "            Route::resource('".$route['path']."' , '".$route['controller']."');";
+
+                        $contentRoutes .= "\n";
+                    }
+
+                    /* NAMESPACES PREFIXES MIDDLEWARE ROUTES */
+
+                    $contentRoutes .=  '        });';
+
+                    $contentRoutes .= "\n";
+
+                }
+
+                /* NAMESPACES PREFIXES MIDDLEWARE */
+
+                /* NAMESPACES PREFIXES ROUTES */
+
+                foreach($p['routes'] as $r => $route)
+                {
+                    $contentRoutes .= "        Route::resource('".$route['path']."' , '".$route['controller']."');";
+
+                    $contentRoutes .= "\n";
+                }
+
+                /* NAMESPACES PREFIXES ROUTES */
+
+                $contentRoutes .=  '    });';
+
+                $contentRoutes .= "\n";
+
+            }
+
+            /* NAMESPACES PREFIXES */
+
+            /* NAMESPACES MIDDLEWARES */
+
+            foreach($ns['middlewares'] as $middleware => $mw)
+            {
+                $contentRoutes .= "    Route::group(['middleware' => '".$middleware."'";
+
+                $contentRoutes .=  '] , function() {';
+
+                $contentRoutes .= "\n";
+
+                /* NAMESPACES MIDDLEWARES ROUTES */
+
+                foreach($mw['routes'] as $r => $route)
+                {
+                    $contentRoutes .= "        Route::resource('".$route['path']."' , '".$route['controller']."');";
+
+                    $contentRoutes .= "\n";
+                }
+
+                /* NAMESPACES MIDDLEWARES ROUTES */
+
+                $contentRoutes .=  '    });';
+
+                $contentRoutes .= "\n";
+
+            }
+
+            /* NAMESPACES MIDDLEWARES */
+
+            /* NAMESPACES ROUTES */
+
+            foreach($ns['routes'] as $r => $route)
+            {
+                $contentRoutes .= "    Route::resource('".$route['path']."' , '".$route['controller']."');";
+
+                $contentRoutes .= "\n";
+            }
+
+            /* NAMESPACES ROUTES */
+
+            $contentRoutes .=  '});';
+
+            $contentRoutes .= "\n";
+
+        }
+
+        /* NAMESPACES */
+
+        /* PREFIXES */
+
+        foreach($router['prefixes'] as $prefix => $p)
+        {
+            $contentRoutes .= "Route::group(['prefix' => '".$prefix."'";
+
+            $contentRoutes .=  '] , function() {';
+
+            $contentRoutes .= "\n";
+
+            /* PREFIXES MIDDLEWARES */
+
+            foreach($p['middlewares'] as $middleware => $mw)
+            {
+                $contentRoutes .= "    Route::group(['middleware' => '".$middleware."'";
+
+                $contentRoutes .=  '] , function() {';
+
+                $contentRoutes .= "\n";
+
+                /* PREFIXES MIDDLEWARES ROUTES */
+
+                foreach($mw['routes'] as $r => $route)
+                {
+                    $contentRoutes .= "        Route::resource('".$route['path']."' , '".$route['controller']."');";
+
+                    $contentRoutes .= "\n";
+                }
+
+                /* PREFIXES MIDDLEWARES ROUTES */
+
+                $contentRoutes .=  '    });';
+
+                $contentRoutes .= "\n";
+
+            }
+
+            /* PREFIXES MIDDLEWARES */
+
+            /* PREFIXES ROUTES */
+
+            foreach($p['routes'] as $r => $route)
+            {
+                $contentRoutes .= "    Route::resource('".$route['path']."' , '".$route['controller']."');";
+
+                $contentRoutes .= "\n";
+            }
+
+            /* PREFIXES ROUTES */
+
+            $contentRoutes .=  '});';
+
+            $contentRoutes .= "\n";
+
+
+        }
+
+        /* PREFIXES */
+
+        /* MIDDLEWARES */
+
+        foreach($router['middlewares'] as $middleware => $mw)
+        {
+            $contentRoutes .= "Route::group(['middleware' => '".$middleware."'";
+
+            $contentRoutes .=  '] , function() {';
+
+            $contentRoutes .= "\n";
+
+            /* MIDDLEWARES ROUTES */
+
+            foreach($mw['routes'] as $r => $route)
+            {
+                $contentRoutes .= "    Route::resource('".$route['path']."' , '".$route['controller']."');";
+
+                $contentRoutes .= "\n";
+            }
+
+            /* MIDDLEWARES ROUTES */
+
+            $contentRoutes .=  '});';
+
+            $contentRoutes .= "\n";
+        }
+
+        /* MIDDLEWARES */
+
+        /* ROUTES */
+
+        foreach($router['routes'] as $r => $route)
+        {
+            $contentRoutes .= "Route::resource('".$route['path']."' , '".$route['controller']."');";
+
+            $contentRoutes .= "\n";
+        }
+
+        /* ROUTES */
+
+        $contentRoutes .= $delimiter;
+
+        $contentRoutes .= "\n";
 
         $lines = file($file);
 
         $init = false;
         $preInit = false;
         $end = false;
-        $content = "\n";
+        $content = "";
 
 
         foreach($lines as $l =>  $line)
@@ -88,13 +278,180 @@ class RouteGenerator{
         if($init && $end)
         {
 
-            //$content = "\n".$delimiter."\n".$content.$delimiter."\n";
-            //dd($content);
             return File::put($file , str_replace($content , $contentRoutes , file_get_contents($file)) );
         }
         else{
             return File::append($file, $contentRoutes);
         }
+
+
+
+    }
+
+    private function generateRouter($resources)
+    {
+
+        $routes = [
+            'namespaces' => [],
+            'prefixes' => [],
+            'middlewares' => [],
+            'routes' => []
+        ];
+
+        foreach($resources as $resource)
+        {
+            if(!empty($resource->namespace))
+            {
+                if(empty($routes['namespaces'][$resource->namespace]))
+                {
+                    $routes['namespaces'][$resource->namespace] = [
+                        'prefixes' => [],
+                        'middlewares' => [],
+                        'routes' => []
+                    ];
+                }
+
+                if(!empty($resource->prefix))
+                {
+
+                    if(empty($routes['namespaces'][$resource->namespace]['prefixes'][$resource->prefix]))
+                    {
+                        $routes['namespaces'][$resource->namespace]['prefixes'][$resource->prefix] = [
+                            'middlewares' => [],
+                            'routes' => []
+                        ];
+                    }
+
+                    if(!empty($resource->middlewares))
+                    {
+
+                        if(empty($routes['namespaces'][$resource->namespace]['prefixes'][$resource->prefix]['middlewares'][$resource->middlewares]))
+                        {
+                            $routes['namespaces'][$resource->namespace]['prefixes'][$resource->prefix]['middlewares'][$resource->middlewares] = [
+                                'routes' => []
+                            ];
+                        }
+
+                        $routes['namespaces'][$resource->namespace]['prefixes'][$resource->prefix]['middlewares'][$resource->middlewares]['routes'][] = [
+                            'path' => snake_case(str_plural($resource->base)),
+                            'controller' => $resource->base.'Controller',
+                            'documentation' => $resource->documentation
+                        ];
+
+
+
+                    }
+                    else
+                    {
+
+                        $routes['namespaces'][$resource->namespace]['prefixes'][$resource->prefix]['routes'][] = [
+                            'path' => snake_case(str_plural($resource->base)),
+                            'controller' => $resource->base.'Controller',
+                            'documentation' => $resource->documentation
+                        ];
+
+                    }
+
+                }
+                else if(!empty($resource->middlewares))
+                {
+                    if(empty($routes['namespaces'][$resource->namespace]['middlewares'][$resource->middlewares]))
+                    {
+                        $routes['namespaces'][$resource->namespace]['middlewares'][$resource->middlewares] = [
+                            'routes' => []
+                        ];
+                    }
+
+                    $routes['namespaces'][$resource->namespace]['middlewares'][$resource->middlewares]['routes'][] = [
+                        'path' => snake_case(str_plural($resource->base)),
+                        'controller' => $resource->base.'Controller',
+                        'documentation' => $resource->documentation
+                    ];
+                }
+                else
+                {
+
+                    $routes['namespaces'][$resource->namespace]['routes'][] = [
+                        'path' => snake_case(str_plural($resource->base)),
+                        'controller' => $resource->base.'Controller',
+                        'documentation' => $resource->documentation
+                    ];
+
+                }
+
+
+            }
+            else if(!empty($resource->prefix))
+            {
+
+                if(empty($routes['prefixes'][$resource->prefix]))
+                {
+                    $routes['prefixes'][$resource->prefix] = [
+                        'middlewares' => [],
+                        'routes' => []
+                    ];
+                }
+
+                if(!empty($resource->middlewares))
+                {
+
+                    if(empty($routes['prefixes'][$resource->prefix]['middlewares'][$resource->middlewares]))
+                    {
+                        $routes['prefixes'][$resource->prefix]['middlewares'][$resource->middlewares] = [
+                            'routes' => []
+                        ];
+                    }
+
+                    $routes['prefixes'][$resource->prefix]['middlewares'][$resource->middlewares]['routes'][] = [
+                        'path' => snake_case(str_plural($resource->base)),
+                        'controller' => $resource->base.'Controller',
+                        'documentation' => $resource->documentation
+                    ];
+
+
+
+                }
+                else
+                {
+
+                    $routes['prefixes'][$resource->prefix]['routes'][] = [
+                        'path' => snake_case(str_plural($resource->base)),
+                        'controller' => $resource->base.'Controller',
+                        'documentation' => $resource->documentation
+                    ];
+
+                }
+
+            }
+            else if(!empty($resource->middlewares))
+            {
+                if(empty($routes['middlewares'][$resource->middlewares]))
+                {
+                    $routes['middlewares'][$resource->middlewares] = [
+                        'routes' => []
+                    ];
+                }
+
+                $routes['middlewares'][$resource->middlewares]['routes'][] = [
+                    'path' => snake_case(str_plural($resource->base)),
+                    'controller' => $resource->base.'Controller',
+                    'documentation' => $resource->documentation
+                ];
+            }
+            else
+            {
+
+                $routes['routes'][] = [
+                    'path' => snake_case(str_plural($resource->base)),
+                    'controller' => $resource->base.'Controller',
+                    'documentation' => $resource->documentation
+                ];
+
+            }
+
+        }
+
+        return $routes;
 
     }
 }
