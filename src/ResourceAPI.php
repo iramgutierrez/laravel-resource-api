@@ -11,6 +11,7 @@ use Iramgutierrez\API\Generators\ManagerGenerator as Manager;
 use Iramgutierrez\API\Generators\ControllerGenerator as Controller;
 use Iramgutierrez\API\Generators\RouteGenerator as Route;
 use Iramgutierrez\API\Generators\MigrationGenerator as Migration;
+use Iramgutierrez\API\Entities\APIResourceEntity as APIResource;
 
 class ResourceAPI extends Command
 {
@@ -132,6 +133,10 @@ class ResourceAPI extends Command
 
         if($this->confirm('Continue?' , 'yes'))
         {
+            $migration = false;
+            $run_migration = false;
+            $route = false;
+            $middlewares = '';
 
 
             foreach($createLayers as $layer => $create)
@@ -144,14 +149,18 @@ class ResourceAPI extends Command
             if($this->confirm('Generate migration?' , 'yes'))
             {
 
+
                 $createMigration = $this->migration->generate(snake_case(str_plural($this->base)) , $this->table);
 
                 if($createMigration['success'])
                 {
+                    $migration = true;
+
                     $this->info($createMigration['message']);
 
                     if($this->confirm('Run migration?' , 'yes'))
                     {
+                        $run_migration = true;
 
                         try
                         {
@@ -190,6 +199,7 @@ class ResourceAPI extends Command
                     $mdws = explode(',' , $middlewares);
 
                 }
+                $route = true;
 
                 $this->route->generate($this->base , $path , $this->prefix , $mdws);
 
@@ -197,10 +207,23 @@ class ResourceAPI extends Command
 
             if($this->documentation)
             {
-                $this->info('apidoc -i '.app_path().'/Http/Controllers/'.$this->path.'/ -f "'.$this->base.'Controller.php" -o '.public_path().'/docs/'.snake_case(str_plural($this->base)));
-
                 exec('apidoc -i '.app_path().'/Http/Controllers/'.$this->path.'/ -f "'.$this->base.'Controller.php" -o '.public_path().'/docs/'.snake_case(str_plural($this->base)));
             }
+
+            $resource = [
+                'base' => $this->base,
+                'table' =>$this->table,
+                'prefix' => $this->prefix,
+                'documentation' =>$this->documentation,
+                'migration' => $migration,
+                'run_migration' => $run_migration,
+                'route' => $route,
+                'middlewares' => $middlewares
+            ];
+
+            $api_resource = APIResource::create($resource);
+
+            $api_resource->save();
 
         }
         else
