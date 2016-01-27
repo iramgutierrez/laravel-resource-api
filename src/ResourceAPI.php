@@ -85,7 +85,7 @@ class ResourceAPI extends Command
 
         $this->migration = $Migration;
 
-        $this->path = \Config::get('resource_api.path' , 'API');
+        //$this->path = \Config::get('resource_api.path' , 'API');
     }
 
     /**
@@ -99,6 +99,8 @@ class ResourceAPI extends Command
         $this->base = ucfirst(camel_case(str_singular($this->argument('entity'))));
 
         $this->table = $this->ask('Table name' , snake_case(str_plural($this->base)));
+
+        $this->path = $this->ask('Path name' , \Config::get('resource_api.path' , 'API') );
 
         $this->prefix = $this->ask('Prefix route' , false);
 
@@ -213,7 +215,7 @@ class ResourceAPI extends Command
                 exec('apidoc -i '.app_path().'/Http/Controllers/'.$this->path.'/ -f "'.$this->base.'Controller.php" -o '.public_path().'/docs/'.snake_case(str_plural($this->base)));
             }
 
-            $api_resource = APIResource::firstOrNew(['base' => $this->base]);
+            $api_resource = APIResource::firstOrNew(['base' => $this->base , 'namespace' => $this->path]);
 
             $api_resource->base = $this->base;
             $api_resource->namespace = $this->path;
@@ -245,6 +247,8 @@ class ResourceAPI extends Command
 
     public function checkIfCreate($layer)
     {
+
+        $this->$layer->setPath($this->path);
 
         $this->$layer->setEntity($this->base);
 

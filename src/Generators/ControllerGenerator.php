@@ -27,13 +27,15 @@ class ControllerGenerator extends BaseGenerator{
 
     protected $documentation;
 
+    protected $pathname;
+
     protected $pathfile;
 
     protected $layer = 'Controller';
 
-    public function __construct()
+    public function setPath($pathname)
     {
-        $this->pathname = \Config::get('resource_api.path' , 'API');
+        $this->pathname = $pathname;
 
         $this->pathfile = $this->pathname;
 
@@ -42,6 +44,7 @@ class ControllerGenerator extends BaseGenerator{
         $this->namespace = $this->getAppNamespace().'Http\\Controllers\\'.$this->pathname.'\\';
 
         $this->path = app_path().'/Http/Controllers/';
+
     }
 
     public function generate()

@@ -26,6 +26,8 @@ class RouteGenerator{
 
         $contentRoutes .= "\n";
 
+        $contentRoutes .= "\n";
+
         /* NAMESPACES */
 
         foreach($router['namespaces'] as $namespace => $ns)
@@ -239,6 +241,8 @@ class RouteGenerator{
         }
 
         /* ROUTES */
+
+        $contentRoutes .= "\n";
 
         $contentRoutes .= $delimiter;
 

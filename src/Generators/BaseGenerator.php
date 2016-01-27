@@ -13,6 +13,8 @@ abstract class BaseGenerator{
 
     protected $filename;
 
+    protected $pathname;
+
     protected $pathfile;
 
     protected $layer;
@@ -24,13 +26,6 @@ abstract class BaseGenerator{
     public function __construct()
     {
 
-        $this->pathname= \Config::get('resource_api.path' , 'API');
-
-        $this->appNamespace = $this->getAppNamespace().$this->pathname.'\\';
-
-        $this->namespace = $this->appNamespace.$this->pathfile.'\\';
-
-        $this->path = app_path().'/'.$this->pathname.'/';
     }
 
     const EXTENSION_FILE = '.php';
@@ -46,6 +41,18 @@ abstract class BaseGenerator{
         $this->entity = $entity;
 
         $this->generateFileName();
+
+    }
+
+    public function setPath($pathname)
+    {
+        $this->pathname = $pathname;
+
+        $this->appNamespace = $this->getAppNamespace().$this->pathname.'\\';
+
+        $this->namespace = $this->appNamespace.$this->pathfile.'\\';
+
+        $this->path = app_path().'/'.$this->pathname.'/';
 
     }
 
