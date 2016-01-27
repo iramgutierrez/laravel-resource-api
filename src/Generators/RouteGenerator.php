@@ -52,7 +52,9 @@ class RouteGenerator{
 
                 foreach($p['middlewares'] as $middleware => $mw)
                 {
-                    $contentRoutes .= "        Route::group(['middleware' => '".$middleware."'";
+                    $middleware = "['".str_replace(',' , "','" , $middleware)."']";
+
+                    $contentRoutes .= "        Route::group(['middleware' => ".$middleware;
 
                     $contentRoutes .=  '] , function() {';
 
@@ -100,7 +102,9 @@ class RouteGenerator{
 
             foreach($ns['middlewares'] as $middleware => $mw)
             {
-                $contentRoutes .= "    Route::group(['middleware' => '".$middleware."'";
+                $middleware = "['".str_replace(',' , "','" , $middleware)."']";
+
+                $contentRoutes .= "    Route::group(['middleware' => ".$middleware;
 
                 $contentRoutes .=  '] , function() {';
 
@@ -158,7 +162,9 @@ class RouteGenerator{
 
             foreach($p['middlewares'] as $middleware => $mw)
             {
-                $contentRoutes .= "    Route::group(['middleware' => '".$middleware."'";
+                $middleware = "['".str_replace(',' , "','" , $middleware)."']";
+
+                $contentRoutes .= "    Route::group(['middleware' => ".$middleware;
 
                 $contentRoutes .=  '] , function() {';
 
@@ -207,7 +213,9 @@ class RouteGenerator{
 
         foreach($router['middlewares'] as $middleware => $mw)
         {
-            $contentRoutes .= "Route::group(['middleware' => '".$middleware."'";
+            $middleware = "['".str_replace(',' , "','" , $middleware)."']";
+
+            $contentRoutes .= "Route::group(['middleware' => ".$middleware;
 
             $contentRoutes .=  '] , function() {';
 

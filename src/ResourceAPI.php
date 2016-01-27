@@ -11,6 +11,7 @@ use Iramgutierrez\API\Generators\ManagerGenerator as Manager;
 use Iramgutierrez\API\Generators\ControllerGenerator as Controller;
 use Iramgutierrez\API\Generators\RouteGenerator as Route;
 use Iramgutierrez\API\Generators\MigrationGenerator as Migration;
+use Iramgutierrez\API\Generators\DocumentationGenerator as Documentation;
 use Iramgutierrez\API\Entities\APIResourceEntity as APIResource;
 
 class ResourceAPI extends Command
@@ -20,8 +21,6 @@ class ResourceAPI extends Command
     protected $table;
 
     protected $prefix;
-
-    protected $documentation;
 
     protected $entity;
 
@@ -36,6 +35,8 @@ class ResourceAPI extends Command
     protected $route;
 
     protected $migration;
+
+    protected $documentation;
 
     protected $path;
 
@@ -67,7 +68,7 @@ class ResourceAPI extends Command
      *
      * @return void
      */
-    public function __construct(Entity $Entity, Repository $Repository, Validator $Validator, Manager $Manager, Controller $Controller, Route $Route , Migration $Migration)
+    public function __construct(Entity $Entity, Repository $Repository, Validator $Validator, Manager $Manager, Controller $Controller, Route $Route , Migration $Migration , Documentation $Documentation)
     {
         parent::__construct();
 
@@ -84,6 +85,8 @@ class ResourceAPI extends Command
         $this->route = $Route;
 
         $this->migration = $Migration;
+
+        $this->documentation = $Documentation;
 
         //$this->path = \Config::get('resource_api.path' , 'API');
     }
@@ -104,7 +107,7 @@ class ResourceAPI extends Command
 
         $this->prefix = $this->ask('Prefix route' , false);
 
-        $this->documentation = $this->confirm('Generate documentation? (Require apidocjs)' , 'yes');
+        $this->generateDocumentation = $this->confirm('Generate documentation? (Require apidocjs)' , 'yes');
 
         $createLayers = [];
 
@@ -202,17 +205,10 @@ class ResourceAPI extends Command
 
                 }
 
-                sort($mdws);
-
                 $middlewares = implode(',' , $mdws);
 
                 $route = true;
 
-            }
-
-            if($this->documentation)
-            {
-                exec('apidoc -i '.app_path().'/Http/Controllers/'.$this->path.'/ -f "'.$this->base.'Controller.php" -o '.public_path().'/docs/'.snake_case(str_plural($this->base)));
             }
 
             $api_resource = APIResource::firstOrNew(['base' => $this->base , 'namespace' => $this->path]);
@@ -221,7 +217,7 @@ class ResourceAPI extends Command
             $api_resource->namespace = $this->path;
             $api_resource->table = $this->table;
             $api_resource->prefix = ($this->prefix) ? $this->prefix : '';
-            $api_resource->documentation = $this->documentation;
+            $api_resource->documentation = $this->generateDocumentation;
             $api_resource->migration = $migration;
             $api_resource->run_migration = $run_migration;
             $api_resource->route = $route;
@@ -230,6 +226,26 @@ class ResourceAPI extends Command
             $api_resource->save();
 
             $this->route->generateAll();
+
+            if($this->generateDocumentation)
+            {
+
+
+                $docs = $this->documentation->generateAll();
+
+                foreach($docs as $doc){
+
+                    if($doc['success'])
+                    {
+                        $this->info($doc['message']);
+                    }
+                    else
+                    {
+                        $this->info($doc['error']);
+                    }
+
+                }
+            }
 
         }
         else

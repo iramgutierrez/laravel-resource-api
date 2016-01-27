@@ -11,15 +11,14 @@ class MigrationGenerator{
 
     public function generate($base , $table)
     {
-
-        if(!File::isDirectory('database/migrations/'.$base))
+        if(!File::isDirectory(database_path('migrations').'/'.$base))
         {
 
-            if(!File::makeDirectory('database/migrations/'.$base))
+            if(!File::makeDirectory(database_path('migrations').'/'.$base))
             {
                 return [
                     'success' => false,
-                    'error' => 'Cannot create database/migrations/'.$base.' directory'
+                    'error' => 'Cannot create '.database_path('migrations').'/'.$base.' directory'
                 ];
             }
 
@@ -36,11 +35,7 @@ class MigrationGenerator{
 
         return [
             'success' => true,
-            'message' => 'Migration created in: database/migrations/'.$base.'/'.$nameMigration.',php'
+            'message' => 'Migration created in: '.database_path('migrations').'/'.$base.'/'.$nameMigration.'.php'
         ];
-
-        //$this->info('Migration created in: database/migrations/'.$base.'/'.$nameMigration.',php');
-
-        //return File::append('app/Http/routes.php', $contentRoutes);
     }
 }
