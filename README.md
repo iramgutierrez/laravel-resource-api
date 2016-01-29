@@ -114,7 +114,7 @@ and if do you want add some middleware:
 Middlewares or middleware groups (comma separated) []:
 ```
 
-When the execution is finished, you should have available the following routes:
+When the execution is finished, you should have available the following functional routes:
 
 | Route         | Method        | Uses  | Action |
 | ------------- |:-------------:| -----:| ------:|
