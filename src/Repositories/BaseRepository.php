@@ -1,8 +1,8 @@
 <?php
 
-namespace Iramgutierrez\API\Repositories;
+namespace IramGutierrez\API\Repositories;
 
-use Iramgutierrez\API\Entities\BaseEntity as Entity;
+use IramGutierrez\API\Entities\BaseEntity as Entity;
 
 class BaseRepository
 {

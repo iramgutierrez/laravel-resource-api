@@ -1,13 +1,13 @@
 <?php
 
-namespace Iramgutierrez\API\Managers;
+namespace IramGutierrez\API\Managers;
 
-use Iramgutierrez\API\Entities\BaseEntity as Entity;
-use Iramgutierrez\API\Validators\BaseValidator as Validator;
+use IramGutierrez\API\Entities\BaseEntity as Entity;
+use IramGutierrez\API\Validators\BaseValidator as Validator;
 
 /**
  * Class BaseManager
- * @package Iramgutierrez\API\Managers
+ * @package IramGutierrez\API\Managers
  */
 class BaseManager
 {

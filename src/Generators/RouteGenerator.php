@@ -1,10 +1,10 @@
 <?php
 
-namespace Iramgutierrez\API\Generators;
+namespace IramGutierrez\API\Generators;
 
 use Illuminate\Support\Facades\File;
 
-use Iramgutierrez\API\Entities\APIResourceEntity as APIResource;
+use IramGutierrez\API\Entities\APIResourceEntity as APIResource;
 
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Iramgutierrez\API\Generators;
+namespace IramGutierrez\API\Generators;
 
 use Memio\Memio\Config\Build;
 use Memio\Model\File;
@@ -12,7 +12,7 @@ use Memio\Model\Constant;
 use Memio\Model\FullyQualifiedName;
 use Memio\Model\Phpdoc\LicensePhpdoc;
 
-use Iramgutierrez\API\Repositories\BaseRepository;
+use IramGutierrez\API\Repositories\BaseRepository;
 
 class RepositoryGenerator extends BaseGenerator{
 

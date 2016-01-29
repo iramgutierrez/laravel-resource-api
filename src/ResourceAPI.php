@@ -1,19 +1,19 @@
 <?php
 
-namespace Iramgutierrez\API;
+namespace IramGutierrez\API;
 
 use Illuminate\Console\Command;
 
 use Illuminate\Support\Facades\Config;
-use Iramgutierrez\API\Generators\EntityGenerator as Entity;
-use Iramgutierrez\API\Generators\RepositoryGenerator as Repository;
-use Iramgutierrez\API\Generators\ValidatorGenerator as Validator;
-use Iramgutierrez\API\Generators\ManagerGenerator as Manager;
-use Iramgutierrez\API\Generators\ControllerGenerator as Controller;
-use Iramgutierrez\API\Generators\RouteGenerator as Route;
-use Iramgutierrez\API\Generators\MigrationGenerator as Migration;
-use Iramgutierrez\API\Generators\DocumentationGenerator as Documentation;
-use Iramgutierrez\API\Entities\APIResourceEntity as APIResource;
+use IramGutierrez\API\Generators\EntityGenerator as Entity;
+use IramGutierrez\API\Generators\RepositoryGenerator as Repository;
+use IramGutierrez\API\Generators\ValidatorGenerator as Validator;
+use IramGutierrez\API\Generators\ManagerGenerator as Manager;
+use IramGutierrez\API\Generators\ControllerGenerator as Controller;
+use IramGutierrez\API\Generators\RouteGenerator as Route;
+use IramGutierrez\API\Generators\MigrationGenerator as Migration;
+use IramGutierrez\API\Generators\DocumentationGenerator as Documentation;
+use IramGutierrez\API\Entities\APIResourceEntity as APIResource;
 
 class ResourceAPI extends Command
 {
