@@ -1,10 +1,10 @@
 # API Resource Generator for Laravel 5.2
 
-![Latest Version](http://img.shields.io/github/release/iramgutierrez/laravel-resource-api.svg?style=flat-square)](https://github.com/iramgutierrez/laravel-resource-api/releases)
+[![Latest Version](http://img.shields.io/github/release/iramgutierrez/laravel-resource-api.svg?style=flat-square)](https://github.com/iramgutierrez/laravel-resource-api/releases)
 
-![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-![Total Downloads](https://img.shields.io/packagist/dt/iramgutierrez/laravel-resource-api.svg?style=flat-square)](https://packagist.org/packages/iramgutierrez/laravel-resource-api)
+[![Total Downloads](https://img.shields.io/packagist/dt/iramgutierrez/laravel-resource-api.svg?style=flat-square)](https://packagist.org/packages/iramgutierrez/laravel-resource-api)
 
 Full resource generator for API RESTful, 
 
@@ -116,13 +116,13 @@ Middlewares or middleware groups (comma separated) []:
 
 When the execution is finished, you should have available the following routes:
 
-| Route         | Method        | Uses  |
-| ------------- |:-------------:| -----:|
-| /tests      | GET | API\TestController@index |
-| /tests      | POST | API\TestController@store |
-| /tests/:id      | GET | API\TestController@show |
-| /tests/:id      | PUT | API\TestController@update |
-| /tests/:id      | DELETE | API\TestController@destroy |
+| Route         | Method        | Uses  | Action |
+| ------------- |:-------------:| -----:| ------:|
+| /tests      | GET | API\TestController@index |Request all tests |
+| /tests      | POST | API\TestController@store | Store a test|
+| /tests/:id      | GET | API\TestController@show | Request a specific test |
+| /tests/:id      | PUT | API\TestController@update | Update a specific test |
+| /tests/:id      | DELETE | API\TestController@destroy | Delete a specific test |
 
 
 
