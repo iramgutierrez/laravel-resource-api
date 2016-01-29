@@ -3,6 +3,7 @@
 namespace IramGutierrez\API\Generators;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use IramGutierrez\API\Entities\APIResourceEntity as APIResource;
 
 
@@ -29,9 +30,12 @@ class DocumentationGenerator{
 
             $command .= '-o '.public_path().'/docs/'.$namespace;
 
+            $command .= ' -t '.realpath(__DIR__.'/../../templateDoc');
+
             $commands[] = [
                 'namespace' => $namespace,
-                'command' => $command
+                'command' => $command,
+                'index' => public_path().'/docs/'.$namespace.'/index.html'
             ];
         }
         $return= [];
@@ -53,6 +57,11 @@ class DocumentationGenerator{
             }
             else
             {
+                $find = '<base href="#" />';
+                $replace = '<base href="/docs/'.$command['namespace'].'/" />';
+
+                File::put($command['index'] , str_replace($find , $replace , file_get_contents($command['index'])));
+
                 $response = [
                     'success' => true,
                     'message' => 'Documentation generated for namespace '.$command['namespace'].' in: '.public_path().'/docs/'.$command['namespace']
