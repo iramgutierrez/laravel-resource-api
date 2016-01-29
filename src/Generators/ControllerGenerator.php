@@ -11,9 +11,7 @@ use Memio\Model\FullyQualifiedName;
 use Memio\Model\Phpdoc\LicensePhpdoc;
 use Memio\Model\Phpdoc\Description;
 use Memio\Model\Phpdoc\MethodPhpdoc;
-
-
-use IramGutierrez\API\Controllers\BaseController;
+use Illuminate\Support\Facades\File as FileSystem;
 
 class ControllerGenerator extends BaseGenerator{
 
@@ -43,13 +41,40 @@ class ControllerGenerator extends BaseGenerator{
 
     public function generate()
     {
+        /*GENERATE BASE CONTROLLER FOR NAMESPACE */
+        if(!FileSystem::exists($this->path.$this->pathname.'/BaseController.php'))
+        {
+          $baseDistPath = realpath(__DIR__.'/../Controllers/BaseController.php.dist');
+          $basePath = realpath(__DIR__.'/../Controllers/').'/BaseController.php';
+          $copy = FileSystem::copy($baseDistPath , $basePath);
+
+          $base = realpath(__DIR__.'/../Controllers/BaseController.php');
+
+          $find = 'use App\Http\Controllers\Controller;';
+
+          $replace = 'use '.$this->getAppNamespace().'Http\Controllers\Controller;';
+
+          $find2 = 'namespace AppNamespace\Http\Controllers\API;';
+
+          $replace2 = 'namespace '.$this->getAppNamespace().'Http\Controllers\\'.$this->pathname.';';
+
+          FileSystem::put($base , str_replace($find2 , $replace2 , str_replace($find , $replace , file_get_contents($base))));
+
+          if(!FileSystem::isDirectory($this->path.$this->pathname))
+          {
+              FileSystem::makeDirectory($this->path.$this->pathname);
+          }
+
+          FileSystem::move($base , $this->path.$this->pathname.'/BaseController.php');
+
+        }
 
         $prefix = ($this->prefix) ? $this->prefix.'/' : '';
 
         $repository = File::make($this->filename)
             ->setLicensePhpdoc(new LicensePhpdoc(self::PROJECT_NAME, self::AUTHOR_NAME, self::AUTHOR_EMAIL))
             ->addFullyQualifiedName(new FullyQualifiedName(\Illuminate\Http\Request::class))
-            ->addFullyQualifiedName(new FullyQualifiedName(BaseController::class))
+            ->addFullyQualifiedName(new FullyQualifiedName($this->namespace."BaseController"))
             ->addFullyQualifiedName(new FullyQualifiedName($this->appNamespace."Repositories\\".$this->entity."Repository as Repository"))
             ->addFullyQualifiedName(new FullyQualifiedName($this->appNamespace."Managers\\".$this->entity."Manager as Manager"))
             ->setStructure(

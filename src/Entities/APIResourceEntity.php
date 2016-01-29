@@ -1,6 +1,6 @@
 <?php
 
-namespace Iramgutierrez\API\Entities;
+namespace IramGutierrez\API\Entities;
 
 class APIResourceEntity extends BaseEntity
 {

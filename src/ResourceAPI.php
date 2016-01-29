@@ -102,7 +102,7 @@ class ResourceAPI extends Command
 
         $this->table = $this->ask('Table name' , snake_case(str_plural($this->base)));
 
-        $this->path = $this->ask('Path name' , Config::get('resource_api.path' , 'API') );
+        $this->path = ucfirst($this->ask('Namespace' , Config::get('resource_api.path' , 'API') ));
 
         $this->prefix = $this->ask('Prefix route' , false);
 
@@ -154,7 +154,7 @@ class ResourceAPI extends Command
             {
 
 
-                $createMigration = $this->migration->generate(snake_case(str_plural($this->base)) , $this->table);
+                $createMigration = $this->migration->generate($this->path , snake_case(str_plural($this->base)) , $this->table);
 
                 if($createMigration['success'])
                 {
@@ -170,7 +170,7 @@ class ResourceAPI extends Command
                         {
 
                             $this->call('migrate', [
-                                '--path' => 'database/migrations/'.snake_case(str_plural($this->base))
+                                '--path' => 'database/migrations/'.$this->path.'/'.snake_case(str_plural($this->base))
                             ]);
 
                         }catch (\Exception $e)

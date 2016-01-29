@@ -32,7 +32,7 @@ class ValidatorGenerator extends BaseGenerator{
                     ->addProperty(
                         Property::make('rules')
                             ->makeProtected()
-                            ->setDefaultValue("[]")
+                            ->setDefaultValue("[\n      'name' => 'required'\n    ]")
                     )
                     ->addMethod(
                         Method::make('__construct')
