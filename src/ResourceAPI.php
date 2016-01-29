@@ -4,6 +4,7 @@ namespace Iramgutierrez\API;
 
 use Illuminate\Console\Command;
 
+use Illuminate\Support\Facades\Config;
 use Iramgutierrez\API\Generators\EntityGenerator as Entity;
 use Iramgutierrez\API\Generators\RepositoryGenerator as Repository;
 use Iramgutierrez\API\Generators\ValidatorGenerator as Validator;
@@ -87,8 +88,6 @@ class ResourceAPI extends Command
         $this->migration = $Migration;
 
         $this->documentation = $Documentation;
-
-        //$this->path = \Config::get('resource_api.path' , 'API');
     }
 
     /**
@@ -103,7 +102,7 @@ class ResourceAPI extends Command
 
         $this->table = $this->ask('Table name' , snake_case(str_plural($this->base)));
 
-        $this->path = $this->ask('Path name' , \Config::get('resource_api.path' , 'API') );
+        $this->path = $this->ask('Path name' , Config::get('resource_api.path' , 'API') );
 
         $this->prefix = $this->ask('Prefix route' , false);
 

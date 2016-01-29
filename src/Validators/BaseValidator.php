@@ -2,6 +2,7 @@
 
 namespace Iramgutierrez\API\Validators;
 
+use Illuminate\Support\Facades\Validator;
 use Iramgutierrez\API\Entities\BaseEntity as Entity;
 
 
@@ -83,7 +84,9 @@ abstract class BaseValidator
 
         $rules = $this->getRules();
 
-        $validation = \Validator::make($data, $rules);
+
+
+        $validation =  Validator::make($data, $rules);
 
         if ($validation->passes()) return true;
 

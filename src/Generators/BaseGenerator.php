@@ -2,6 +2,8 @@
 
 namespace Iramgutierrez\API\Generators;
 
+use Illuminate\Support\Facades\File;
+
 abstract class BaseGenerator{
 
 
@@ -73,24 +75,24 @@ abstract class BaseGenerator{
 
     protected function generateFile($code)
     {
-
-        if(!\File::isDirectory($this->path))
+        
+        if(!File::isDirectory($this->path))
         {
-            \File::makeDirectory($this->path);
+            File::makeDirectory($this->path);
         }
 
-        if(\File::isWritable($this->path)){
+        if(File::isWritable($this->path)){
 
-            if(!\File::isDirectory($this->path.$this->pathfile))
+            if(!File::isDirectory($this->path.$this->pathfile))
             {
-                \File::makeDirectory($this->path.$this->pathfile);
+                File::makeDirectory($this->path.$this->pathfile);
             }
 
-            if(\File::isWritable($this->path.$this->pathfile))
+            if(File::isWritable($this->path.$this->pathfile))
             {
-                \File::put($this->filename , $code);
+                File::put($this->filename , $code);
 
-                if(\File::exists($this->filename))
+                if(File::exists($this->filename))
                 {
                     return "File ".$this->filename." created successfully";
                 }

@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Iramgutierrez\API\Repositories\BaseRepository as Repository;
 use Iramgutierrez\API\Managers\BaseManager as Manager;
 use Iramgutierrez\API\Entities\BaseEntity as Entity;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\MessageBag;
 
 
@@ -69,7 +68,7 @@ class BaseController extends Controller
      */
     public function store(Request $request)
     {
-        $data = Input::all();
+        $data = $request->all();
 
         $response = $this->manager->save($data);
 
@@ -91,7 +90,7 @@ class BaseController extends Controller
             return response()->json(['error' => 'Entity not found'], 404);
         }
 
-        $data = Input::all();
+        $data = $request->all();
 
         $this->manager->setEntity($resource);
 

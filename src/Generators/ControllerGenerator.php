@@ -5,19 +5,13 @@ namespace Iramgutierrez\API\Generators;
 use Memio\Memio\Config\Build;
 use Memio\Model\File;
 use Memio\Model\Object;
-use Memio\Model\Property;
 use Memio\Model\Method;
 use Memio\Model\Argument;
-use Memio\Model\Constant;
 use Memio\Model\FullyQualifiedName;
 use Memio\Model\Phpdoc\LicensePhpdoc;
-use Memio\Model\Phpdoc\ApiTag;
 use Memio\Model\Phpdoc\Description;
-use Memio\Model\Phpdoc\DeprecationTag;
 use Memio\Model\Phpdoc\MethodPhpdoc;
-use Memio\Model\Phpdoc\ParameterTag;
 
-use Illuminate\Http\Request;
 
 use Iramgutierrez\API\Controllers\BaseController;
 
