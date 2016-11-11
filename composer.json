@@ -13,7 +13,6 @@
     "memio/memio": "^1.0",
     "illuminate/http": "5.2.*",
     "illuminate/support": "5.2.*",
-    "illuminate/config": "5.2.*",
     "illuminate/console": "5.2.*"
 
   },
