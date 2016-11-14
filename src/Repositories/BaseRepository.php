@@ -4,10 +4,21 @@ namespace IramGutierrez\API\Repositories;
 
 use IramGutierrez\API\Entities\BaseEntity as Entity;
 
-class BaseRepository
+/**
+ * Class BaseRepository
+ * @package IramGutierrez\API\Repositories
+ */
+abstract class BaseRepository
 {
+    /**
+     * @var Entity
+     */
     protected $entity;
 
+    /**
+     * BaseRepository constructor.
+     * @param Entity $Entity
+     */
     public function __construct(Entity $Entity)
     {
 
@@ -24,7 +35,11 @@ class BaseRepository
         return $this->entity->get();
     }
 
-    public function findById($id)
+    /**
+     * @param $id
+     * @return Entity
+     */
+    public function find($id)
     {
         return $this->entity->find($id);
     }
