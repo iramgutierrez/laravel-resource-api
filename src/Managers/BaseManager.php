@@ -2,6 +2,7 @@
 
 namespace IramGutierrez\API\Managers;
 
+use Illuminate\Contracts\Support\MessageBag;
 use IramGutierrez\API\Entities\BaseEntity as Entity;
 use IramGutierrez\API\Validators\BaseValidator as Validator;
 
@@ -9,7 +10,7 @@ use IramGutierrez\API\Validators\BaseValidator as Validator;
  * Class BaseManager
  * @package IramGutierrez\API\Managers
  */
-class BaseManager
+abstract class BaseManager
 {
     /**
      * @var
@@ -40,7 +41,8 @@ class BaseManager
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @param array $data
+     * @return Entity|Illuminate\Contracts\Support\MessageBag
      */
     public function save(array $data)
     {
@@ -50,55 +52,34 @@ class BaseManager
 
         $isValid = $this->validator->isValid($this->data);
 
-        if ($isValid) {
+        if ($isValid)
+        {
             $this->entity->fill($this->data);
-
             $this->entity->save();
-
             return $this->entity;
-
-        } else {
-
+        }
+        else
+        {
             return $this->validator->getErrors();
-
         }
 
     }
 
+    /**
+     * @param array $data
+     * @return Entity|Illuminate\Contracts\Support\MessageBag
+     */
     public function update(array $data)
     {
 
-        $this->data = $data;
-
-        $this->prepareData();
-
         $this->validator->setEntity($this->entity);
 
-        $isValid = $this->validator->isValid($this->data);
-
-        if ($isValid) {
-
-            $fillable = $this->entity->getFillable();
-
-            $data = $this->data;
-
-            foreach ($data as $k => $v) {
-                if (in_array($k, $fillable)) {
-                    $this->entity->$k = $v;
-                }
-            }
-
-            $this->entity->update();
-
-            return $this->entity;
-
-        } else {
-
-            return $this->validator->getErrors();
-
-        }
+        return $this->save($data);
     }
 
+    /**
+     * @return bool
+     */
     public function delete()
     {
         if($this->entity->exists)
@@ -119,6 +100,8 @@ class BaseManager
     public function prepareData()
     {
         $data = $this->data;
+
+        /*TO DO*/
 
         $this->data = $data;
 

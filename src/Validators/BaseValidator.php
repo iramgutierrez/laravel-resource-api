@@ -2,6 +2,7 @@
 
 namespace IramGutierrez\API\Validators;
 
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Validator;
 use IramGutierrez\API\Entities\BaseEntity as Entity;
 
@@ -12,6 +13,12 @@ use IramGutierrez\API\Entities\BaseEntity as Entity;
  */
 abstract class BaseValidator
 {
+
+    /**
+     * @var
+     */
+    protected $data;
+
     /**
      * @var
      */
@@ -23,16 +30,19 @@ abstract class BaseValidator
     protected $entity;
 
     /**
-     * @var
+     * @var MessageBag
      */
     protected $errors;
 
     /**
+     * BaseValidator constructor.
      * @param Entity $Entity
      */
     public function __construct(Entity $Entity)
     {
         $this->entity = $Entity;
+
+        $this->errors = new MessageBag();
     }
 
     /**
@@ -60,7 +70,7 @@ abstract class BaseValidator
     }
 
     /**
-     * @return mixed
+     * @return MessageBag
      */
     public function getErrors()
     {
@@ -83,8 +93,6 @@ abstract class BaseValidator
         }
 
         $rules = $this->getRules();
-
-
 
         $validation =  Validator::make($data, $rules);
 

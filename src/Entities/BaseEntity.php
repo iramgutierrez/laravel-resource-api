@@ -4,7 +4,13 @@ namespace IramGutierrez\API\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BaseEntity extends Model
+abstract class BaseEntity extends Model
 {
+
+    protected $fillable = ['id' , 'name'];
+
+    protected $hidden = [];
+
+    protected $appends = [];
 
 }

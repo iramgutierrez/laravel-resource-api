@@ -16,7 +16,9 @@ class RouteGenerator{
 
         $router = $this->generateRouter($resources);
 
-        $file = app_path().'/Http/routes.php';
+        $file = base_path().'/routes/web.php';
+
+        $contentRoutes .= "\n";
 
         $delimiter = '/**  GENERATE BY iramgutierrez/laravel-resource-api DO NOT REMOVE **/';
 
@@ -32,9 +34,9 @@ class RouteGenerator{
 
         foreach($router['namespaces'] as $namespace => $ns)
         {
-            $contentRoutes .= "Route::group(['namespace' => '".$namespace."'";
+            $contentRoutes .= '$app->group([\'namespace\' => \''.$namespace."'";
 
-            $contentRoutes .=  '] , function() {';
+            $contentRoutes .=  '] , function() use ($app) {';
 
             $contentRoutes .= "\n";
 
@@ -42,9 +44,9 @@ class RouteGenerator{
 
             foreach($ns['prefixes'] as $prefix => $p)
             {
-                $contentRoutes .= "    Route::group(['prefix' => '".$prefix."'";
+                $contentRoutes .= '    $app->group([\'prefix\' => \''.$prefix."'";
 
-                $contentRoutes .=  '] , function() {';
+                $contentRoutes .=  '] , function() use ($app) {';
 
                 $contentRoutes .= "\n";
 
@@ -54,9 +56,9 @@ class RouteGenerator{
                 {
                     $middleware = "['".str_replace(',' , "','" , $middleware)."']";
 
-                    $contentRoutes .= "        Route::group(['middleware' => ".$middleware;
+                    $contentRoutes .= '        $app->group([\'middleware\' => '.$middleware;
 
-                    $contentRoutes .=  '] , function() {';
+                    $contentRoutes .=  '] , function() use ($app)  {';
 
                     $contentRoutes .= "\n";
 
@@ -64,8 +66,20 @@ class RouteGenerator{
 
                     foreach($mw['routes'] as $r => $route)
                     {
-                        $contentRoutes .= "            Route::resource('".$route['path']."' , '".$route['controller']."');";
-
+                        $contentRoutes .= "\n";
+                        $contentRoutes .= "            /**  ".$route['path']." Resource **/";
+                        $contentRoutes .= "\n";
+                        $contentRoutes .= '            $app->get(\''.$route['path']."' , '".$route['controller']."@index');";
+                        $contentRoutes .= "\n";
+                        $contentRoutes .= '            $app->post(\''.$route['path']."' , '".$route['controller']."@store');";
+                        $contentRoutes .= "\n";
+                        $contentRoutes .= '            $app->get(\''.$route['path']."/{id}' , '".$route['controller']."@show');";
+                        $contentRoutes .= "\n";
+                        $contentRoutes .= '            $app->put(\''.$route['path']."/{id}' , '".$route['controller']."@update');";
+                        $contentRoutes .= "\n";
+                        $contentRoutes .= '            $app->delete(\''.$route['path']."/{id}' , '".$route['controller']."@destroy');";
+                        $contentRoutes .= "\n";
+                        $contentRoutes .= "            /**  ".$route['path']." Resource **/";
                         $contentRoutes .= "\n";
                     }
 
@@ -83,8 +97,20 @@ class RouteGenerator{
 
                 foreach($p['routes'] as $r => $route)
                 {
-                    $contentRoutes .= "        Route::resource('".$route['path']."' , '".$route['controller']."');";
-
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= "        /**  ".$route['path']." Resource **/";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->get(\''.$route['path']."' , '".$route['controller']."@index');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->post(\''.$route['path']."' , '".$route['controller']."@store');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->get(\''.$route['path']."/{id}' , '".$route['controller']."@show');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->put(\''.$route['path']."/{id}' , '".$route['controller']."@update');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->delete(\''.$route['path']."/{id}' , '".$route['controller']."@destroy');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= "        /**  ".$route['path']." Resource **/";
                     $contentRoutes .= "\n";
                 }
 
@@ -104,9 +130,9 @@ class RouteGenerator{
             {
                 $middleware = "['".str_replace(',' , "','" , $middleware)."']";
 
-                $contentRoutes .= "    Route::group(['middleware' => ".$middleware;
+                $contentRoutes .= '    $app->group([\'middleware\' => '.$middleware;
 
-                $contentRoutes .=  '] , function() {';
+                $contentRoutes .=  '] , function()  use ($app) {';
 
                 $contentRoutes .= "\n";
 
@@ -114,9 +140,22 @@ class RouteGenerator{
 
                 foreach($mw['routes'] as $r => $route)
                 {
-                    $contentRoutes .= "        Route::resource('".$route['path']."' , '".$route['controller']."');";
-
                     $contentRoutes .= "\n";
+                    $contentRoutes .= "        /**  ".$route['path']." Resource **/";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->get(\''.$route['path']."' , '".$route['controller']."@index');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->post(\''.$route['path']."' , '".$route['controller']."@store');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->get(\''.$route['path']."/{id}' , '".$route['controller']."@show');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->put(\''.$route['path']."/{id}' , '".$route['controller']."@update');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->delete(\''.$route['path']."/{id}' , '".$route['controller']."@destroy');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= "        /**  ".$route['path']." Resource **/";
+                    $contentRoutes .= "\n";
+
                 }
 
                 /* NAMESPACES MIDDLEWARES ROUTES */
@@ -133,8 +172,20 @@ class RouteGenerator{
 
             foreach($ns['routes'] as $r => $route)
             {
-                $contentRoutes .= "    Route::resource('".$route['path']."' , '".$route['controller']."');";
-
+                $contentRoutes .= "\n";
+                $contentRoutes .= "    /**  ".$route['path']." Resource **/";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->get(\''.$route['path']."' , '".$route['controller']."@index');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->post(\''.$route['path']."' , '".$route['controller']."@store');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->get(\''.$route['path']."/{id}' , '".$route['controller']."@show');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->put(\''.$route['path']."/{id}' , '".$route['controller']."@update');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->delete(\''.$route['path']."/{id}' , '".$route['controller']."@destroy');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= "    /**  ".$route['path']." Resource **/";
                 $contentRoutes .= "\n";
             }
 
@@ -152,9 +203,9 @@ class RouteGenerator{
 
         foreach($router['prefixes'] as $prefix => $p)
         {
-            $contentRoutes .= "Route::group(['prefix' => '".$prefix."'";
+            $contentRoutes .= '$app->group([\'prefix\' => \''.$prefix."'";
 
-            $contentRoutes .=  '] , function() {';
+            $contentRoutes .=  '] , function()  use ($app) {';
 
             $contentRoutes .= "\n";
 
@@ -164,9 +215,9 @@ class RouteGenerator{
             {
                 $middleware = "['".str_replace(',' , "','" , $middleware)."']";
 
-                $contentRoutes .= "    Route::group(['middleware' => ".$middleware;
+                $contentRoutes .= '    $app->group([\'middleware\' => '.$middleware;
 
-                $contentRoutes .=  '] , function() {';
+                $contentRoutes .=  '] , function()  use ($app) {';
 
                 $contentRoutes .= "\n";
 
@@ -174,8 +225,20 @@ class RouteGenerator{
 
                 foreach($mw['routes'] as $r => $route)
                 {
-                    $contentRoutes .= "        Route::resource('".$route['path']."' , '".$route['controller']."');";
-
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= "        /**  ".$route['path']." Resource **/";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->get(\''.$route['path']."' , '".$route['controller']."@index');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->post(\''.$route['path']."' , '".$route['controller']."@store');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->get(\''.$route['path']."/{id}' , '".$route['controller']."@show');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->put(\''.$route['path']."/{id}' , '".$route['controller']."@update');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= '        $app->delete(\''.$route['path']."/{id}' , '".$route['controller']."@destroy');";
+                    $contentRoutes .= "\n";
+                    $contentRoutes .= "        /**  ".$route['path']." Resource **/";
                     $contentRoutes .= "\n";
                 }
 
@@ -193,8 +256,20 @@ class RouteGenerator{
 
             foreach($p['routes'] as $r => $route)
             {
-                $contentRoutes .= "    Route::resource('".$route['path']."' , '".$route['controller']."');";
-
+                $contentRoutes .= "\n";
+                $contentRoutes .= "    /**  ".$route['path']." Resource **/";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->get(\''.$route['path']."' , '".$route['controller']."@index');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->post(\''.$route['path']."' , '".$route['controller']."@store');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->get(\''.$route['path']."/{id}' , '".$route['controller']."@show');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->put(\''.$route['path']."/{id}' , '".$route['controller']."@update');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->delete(\''.$route['path']."/{id}' , '".$route['controller']."@destroy');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= "    /**  ".$route['path']." Resource **/";
                 $contentRoutes .= "\n";
             }
 
@@ -215,9 +290,9 @@ class RouteGenerator{
         {
             $middleware = "['".str_replace(',' , "','" , $middleware)."']";
 
-            $contentRoutes .= "Route::group(['middleware' => ".$middleware;
+            $contentRoutes .= '$app->group([\'middleware\' => '.$middleware;
 
-            $contentRoutes .=  '] , function() {';
+            $contentRoutes .=  '] , function()  use ($app) {';
 
             $contentRoutes .= "\n";
 
@@ -225,8 +300,20 @@ class RouteGenerator{
 
             foreach($mw['routes'] as $r => $route)
             {
-                $contentRoutes .= "    Route::resource('".$route['path']."' , '".$route['controller']."');";
-
+                $contentRoutes .= "\n";
+                $contentRoutes .= "    /**  ".$route['path']." Resource **/";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->get(\''.$route['path']."' , '".$route['controller']."@index');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->post(\''.$route['path']."' , '".$route['controller']."@store');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->get(\''.$route['path']."/{id}' , '".$route['controller']."@show');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->put(\''.$route['path']."/{id}' , '".$route['controller']."@update');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= '    $app->delete(\''.$route['path']."/{id}' , '".$route['controller']."@destroy');";
+                $contentRoutes .= "\n";
+                $contentRoutes .= "    /**  ".$route['path']." Resource **/";
                 $contentRoutes .= "\n";
             }
 
@@ -243,8 +330,20 @@ class RouteGenerator{
 
         foreach($router['routes'] as $r => $route)
         {
-            $contentRoutes .= "Route::resource('".$route['path']."' , '".$route['controller']."');";
-
+            $contentRoutes .= "\n";
+            $contentRoutes .= "/**  ".$route['path']." Resource **/";
+            $contentRoutes .= "\n";
+            $contentRoutes .= '$app->get(\''.$route['path']."' , '".$route['controller']."@index');";
+            $contentRoutes .= "\n";
+            $contentRoutes .= '$app->post(\''.$route['path']."' , '".$route['controller']."@store');";
+            $contentRoutes .= "\n";
+            $contentRoutes .= '$app->get(\''.$route['path']."/{id}' , '".$route['controller']."@show');";
+            $contentRoutes .= "\n";
+            $contentRoutes .= '$app->put(\''.$route['path']."/{id}' , '".$route['controller']."@update');";
+            $contentRoutes .= "\n";
+            $contentRoutes .= '$app->delete(\''.$route['path']."/{id}' , '".$route['controller']."@destroy');";
+            $contentRoutes .= "\n";
+            $contentRoutes .= "/**  ".$route['path']." Resource **/";
             $contentRoutes .= "\n";
         }
 
@@ -253,6 +352,8 @@ class RouteGenerator{
         $contentRoutes .= "\n";
 
         $contentRoutes .= $delimiter;
+
+        $contentRoutes .= "\n";
 
         $contentRoutes .= "\n";
 
